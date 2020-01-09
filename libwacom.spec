@@ -1,6 +1,6 @@
 Name:           libwacom
-Version:        0.8
-Release:        1%{?dist}
+Version:        0.16
+Release:        2%{?dist}
 Summary:        Tablet Information Client Library
 Requires:       %{name}-data
 
@@ -9,6 +9,9 @@ License:        MIT
 URL:            http://linuxwacom.sourceforge.net
 
 Source0:        http://prdownloads.sourceforge.net/linuxwacom/%{name}/%{name}-%{version}.tar.bz2
+
+Patch01:        0001-Add-support-for-the-ExpressKey-Remote.patch
+Patch02:        0002-data-make-all-buttons-on-the-EKR-left-buttons.patch
 
 BuildRequires:  autoconf automake libtool doxygen
 BuildRequires:  glib2-devel libgudev1-devel
@@ -35,6 +38,8 @@ Tablet information client library library data files.
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch01 -p1
+%patch02 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -81,6 +86,12 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_datadir}/libwacom/layouts/*.svg
 
 %changelog
+* Wed Mar 16 2016 Peter Hutterer <peter.hutterer@redhat.com> 0.16-2
+- Add data file for the Expresskey Remote (#1318027)
+
+* Fri Nov 13 2015 Peter Hutterer <peter.hutterer@redhat.com> 0.16-1
+- libwacom 0.16 (#1250769)
+
 * Thu Apr 24 2014 Adam Jackson <ajax@redhat.com> 0.8-1
 - libwacom 0.8
 

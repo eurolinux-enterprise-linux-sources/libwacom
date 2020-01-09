@@ -1,3 +1,57 @@
+libwacom 0.16:
+- Data files for Intuos and Intuos 2 series added
+- New stylus ID 0x8e2
+
+libwacom 0.15:
+- New devices:
+  - ISDv4 0x4800 (Dell Venue 10 5050 Android tablet)
+- Bustype i2c is now supported
+
+libwacom 0.14:
+- New devices:
+  - Cintiq 13HD touch
+- Fixes to the udev rule set to tag uinput devices correctly too
+- Integrated tabled are not marked as ID_INPUT_TOUCHPAD anymore now
+
+libwacom 0.13:
+- New devices:
+  - DTU-1141
+  - Huion H610 Pro
+- Several memory leak fixes
+- Added libwacom_match_get_name() to allow data-file matching on the name as
+  well as the pid/vid
+
+libwacom 0.12:
+- Added libwacom_stylus_has_wheel() for relative wheel detection
+- Added libwacom_stylus_get_axes() for a list of supported axes
+- New devices:
+  - Cintiq 27QHD, Cintiq 27QHD Touch
+  - DTU-1031X
+  - Intuos Pen Medium
+- Reworked udev rules
+  - be more restrictive when to set ID_INPUT_TOUCHPAD
+  - unset ID_INPUT_JOYSTICK on tablet devices
+  - tag the Pad device as ID_INPUT_TABLET_PAD
+
+libwacom 0.11:
+- Better detection of wireless tablets on kernels 3.18
+- New devices:
+  - Cintiq Companion
+
+libwacom 0.10:
+- Fixed bus detection of Bluetooth tablets on kernels 3.14
+  and later (bbe317540)
+- New devices:
+  - ISDV4 0x12C, 116, 4004, 5000, 5002
+
+libwacom 0.9.0:
+- Add support for TouchSwitch keyword
+- New devices:
+  - Intuos series
+  - Pen&Touch (2nd gen)
+  - DTU-1031
+  - Cintiq Companion Hybrid
+
 libwacom 0.8.0:
 - New devices:
   - Cintiq 13HD, 22HD touch

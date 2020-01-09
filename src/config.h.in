@@ -37,6 +37,9 @@
    */
 #undef LT_OBJDIR
 
+/* Need g_type_init() call */
+#undef NEED_G_TYPE_INIT
+
 /* Name of package */
 #undef PACKAGE
 

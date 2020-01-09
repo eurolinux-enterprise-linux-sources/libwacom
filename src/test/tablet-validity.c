@@ -153,6 +153,7 @@ static void verify_tablet(WacomDeviceDatabase *db, WacomDevice *device)
 		case WCLASS_INTUOS2:
 		case WCLASS_INTUOS3:
 		case WCLASS_INTUOS4:
+		case WCLASS_INTUOS5:
 		case WCLASS_CINTIQ:
 			{
 				int i;
@@ -161,13 +162,16 @@ static void verify_tablet(WacomDeviceDatabase *db, WacomDevice *device)
 					assert(styli[i] != WACOM_ERASER_FALLBACK_ID);
 				}
 			}
+			break;
 		default:
-			assert(1); /* don't get here */
+			abort(); /* don't get here */
 	}
 
 	for (i = 0; i < nstyli; i++) {
 		const WacomStylus *stylus;
 		const char *stylus_name;
+		WacomAxisTypeFlags axes;
+
 		stylus = libwacom_stylus_get_for_id (db, styli[i]);
 		assert(stylus);
 		stylus_name = libwacom_stylus_get_name (stylus);
@@ -176,6 +180,31 @@ static void verify_tablet(WacomDeviceDatabase *db, WacomDevice *device)
 			WacomStylusType type;
 			type = libwacom_stylus_get_type (stylus);
 			assert(eraser_is_present (db, styli, nstyli, type));
+		}
+
+		if (libwacom_stylus_get_type (stylus) == WSTYLUS_PUCK) {
+			int has_wheel = libwacom_stylus_has_wheel (stylus);
+			int has_lens = libwacom_stylus_has_lens (stylus);
+			/* 4D mouse is the only one with neither, everything
+			 * else has either wheel or lens */
+			if (styli[i] == 0x94) {
+				assert (!has_wheel);
+				assert (!has_lens);
+			} else {
+				assert (has_wheel != has_lens);
+			}
+		}
+
+		if (libwacom_stylus_is_eraser (stylus))
+			assert (libwacom_stylus_get_num_buttons (stylus) > 0);
+
+		axes = libwacom_stylus_get_axes (stylus);
+		if (libwacom_stylus_get_type (stylus) == WSTYLUS_PUCK) {
+			assert((axes & WACOM_AXIS_TYPE_PRESSURE) == 0);
+		} else if ((styli[i] != 0xffffd) && (styli[i] != 0x8e2)) {
+			assert(axes & WACOM_AXIS_TYPE_TILT);
+			assert(axes & WACOM_AXIS_TYPE_PRESSURE);
+			assert(axes & WACOM_AXIS_TYPE_DISTANCE);
 		}
 	}
 	assert(libwacom_get_ring_num_modes(device) >= 0);
@@ -212,6 +241,8 @@ int main(int argc, char **argv)
 		verify_tablet(db, *device);
 
 	libwacom_database_destroy (db);
+
+	free(devices);
 
 	return 0;
 }

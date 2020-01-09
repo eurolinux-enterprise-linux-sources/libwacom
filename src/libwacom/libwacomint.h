@@ -46,13 +46,15 @@ enum WacomFeature {
 	FEATURE_TOUCH		= (1 << 1),
 	FEATURE_RING		= (1 << 2),
 	FEATURE_RING2		= (1 << 3),
-	FEATURE_REVERSIBLE	= (1 << 4)
+	FEATURE_REVERSIBLE	= (1 << 4),
+	FEATURE_TOUCHSWITCH	= (1 << 5)
 };
 
 /* WARNING: When adding new members to this struct
  * make sure to update libwacom_copy_match() ! */
 struct _WacomMatch {
 	char *match;
+	char *name;
 	WacomBusType bus;
 	uint32_t vendor_id;
 	uint32_t product_id;
@@ -100,7 +102,9 @@ struct _WacomStylus {
 	gboolean has_eraser;
 	gboolean is_eraser;
 	gboolean has_lens;
+	gboolean has_wheel;
 	WacomStylusType type;
+	WacomAxisTypeFlags axes;
 };
 
 struct _WacomDeviceDatabase {
@@ -116,12 +120,11 @@ struct _WacomError {
 /* INTERNAL */
 void libwacom_error_set(WacomError *error, enum WacomErrorCode code, const char *msg, ...);
 void libwacom_stylus_destroy(WacomStylus *stylus);
-void libwacom_update_match(WacomDevice *device, WacomBusType bus, int vendor_id, int product_id);
+void libwacom_update_match(WacomDevice *device, const char *name, WacomBusType bus, int vendor_id, int product_id);
 
 WacomBusType  bus_from_str (const char *str);
 const char   *bus_to_str   (WacomBusType bus);
-char *make_match_string(WacomBusType bus, int vendor_id, int product_id);
-
+char *make_match_string(const char *name, WacomBusType bus, int vendor_id, int product_id);
 
 #endif /* _LIBWACOMINT_H_ */
 

@@ -24,10 +24,6 @@
  *	Peter Hutterer (peter.hutterer@redhat.com)
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 
 /** @cond hide_from_doxygen */
 #ifndef _LIBWACOM_H_
@@ -118,7 +114,8 @@ typedef enum {
 	WBUSTYPE_UNKNOWN,		/**< Unknown/unsupported bus type */
 	WBUSTYPE_USB,		/**< USB tablet */
 	WBUSTYPE_SERIAL,		/**< Serial tablet */
-	WBUSTYPE_BLUETOOTH		/**< Bluetooth tablet */
+	WBUSTYPE_BLUETOOTH,		/**< Bluetooth tablet */
+	WBUSTYPE_I2C,		/**< I2C tablet */
 } WacomBusType;
 
 /**
@@ -180,6 +177,23 @@ typedef enum {
 	WACOM_BUTTON_RINGS_MODESWITCH       = (WACOM_BUTTON_RING_MODESWITCH | WACOM_BUTTON_RING2_MODESWITCH),
 	WACOM_BUTTON_TOUCHSTRIPS_MODESWITCH = (WACOM_BUTTON_TOUCHSTRIP_MODESWITCH | WACOM_BUTTON_TOUCHSTRIP2_MODESWITCH),
 } WacomButtonFlags;
+
+/**
+ * Axis type for a stylus. Note that x/y is implied.
+ */
+typedef enum {
+	WACOM_AXIS_TYPE_NONE                = 0,
+	/** Tilt in x and y direction */
+	WACOM_AXIS_TYPE_TILT                = (1 << 1),
+	/** Rotation in the z-axis */
+	WACOM_AXIS_TYPE_ROTATION_Z          = (1 << 2),
+	/** Distance to surface */
+	WACOM_AXIS_TYPE_DISTANCE            = (1 << 3),
+	/** Tip pressure */
+	WACOM_AXIS_TYPE_PRESSURE            = (1 << 4),
+	/** A absolute-position slider like the wheel on the airbrush */
+	WACOM_AXIS_TYPE_SLIDER              = (1 << 5),
+} WacomAxisTypeFlags;
 
 typedef enum {
 	WFALLBACK_NONE = 0,
@@ -438,6 +452,12 @@ int libwacom_has_ring2(const WacomDevice *device);
 
 /**
  * @param device The tablet to query
+ * @return non-zero if the device has a touch switch or zero otherwise
+ */
+int libwacom_has_touchswitch(const WacomDevice *device);
+
+/**
+ * @param device The tablet to query
  * @return the number of modes for the touchring if it has a mode switch
  */
 int libwacom_get_ring_num_modes(const WacomDevice *device);
@@ -559,6 +579,18 @@ int         libwacom_stylus_has_lens (const WacomStylus *stylus);
 
 /**
  * @param stylus The stylus to query
+ * @return Whether the stylus has a relative mouse wheel
+ */
+int         libwacom_stylus_has_wheel (const WacomStylus *stylus);
+
+/**
+ * @param stylus The stylus to query
+ * @return The flags specifying the list of absolute axes
+ */
+WacomAxisTypeFlags libwacom_stylus_get_axes (const WacomStylus *stylus);
+
+/**
+ * @param stylus The stylus to query
  * @return The type of stylus
  */
 WacomStylusType libwacom_stylus_get_type (const WacomStylus *stylus);
@@ -571,11 +603,14 @@ WacomStylusType libwacom_stylus_get_type (const WacomStylus *stylus);
  */
 void libwacom_print_stylus_description (int fd, const WacomStylus *stylus);
 
+const char *libwacom_match_get_name(const WacomMatch *match);
 WacomBusType libwacom_match_get_bustype(const WacomMatch *match);
 uint32_t libwacom_match_get_product_id(const WacomMatch *match);
 uint32_t libwacom_match_get_vendor_id(const WacomMatch *match);
 const char* libwacom_match_get_match_string(const WacomMatch *match);
 
+/** @cond hide_from_doxygen */
 #endif /* _LIBWACOM_H_ */
+/** @endcond */
 
 /* vim: set noexpandtab tabstop=8 shiftwidth=8: */
