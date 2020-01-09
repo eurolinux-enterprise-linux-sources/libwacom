@@ -1,6 +1,6 @@
 Name:           libwacom
 Version:        0.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Tablet Information Client Library
 Requires:       %{name}-data
 
@@ -13,6 +13,7 @@ Patch01:        libwacom-0.5-fix-missing-eraser.patch
 Patch02:        libwacom-0.5-data-add-generic-eraser-to-Bamboo-Pen-Touch.patch
 Patch03:        libwacom-0.5-tools-add-missing-linker-flags-for-list-local-device.patch
 Patch04:        libwacom-0.5-add-cintiq-22hd.patch
+Patch05:        libwacom-0.5-data-add-ISDV4-90-tablet.patch
 
 BuildRequires:  autoconf automake libtool doxygen
 BuildRequires:  glib2-devel libgudev1-devel
@@ -43,6 +44,7 @@ Tablet information client library library data files.
 %patch02 -p1 -b .generic-eraser
 %patch03 -p1 -b .linker-flags
 %patch04 -p1 -b .cintiq-22hd
+%patch05 -p1 -b .isdv4-90
 
 %build
 autoreconf --force -v --install || exit 1
@@ -87,6 +89,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_datadir}/libwacom/*.stylus
 
 %changelog
+* Thu Jun 06 2013 Peter Hutterer <peter.hutterer@redhat.com> 0.5-5
+- Add ISDv 0x90 description (#847427)
+
 * Tue Sep 18 2012 Olivier Fourdan <ofourdan@redhat.com> 0.5-4
 - Add Cintiq 22HD definition (#857073)
 

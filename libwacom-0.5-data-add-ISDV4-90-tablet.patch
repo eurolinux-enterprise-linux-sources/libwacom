@@ -1,0 +1,41 @@
+From 80bd7e8d8467c1a18376710d7392eb816b4d76f1 Mon Sep 17 00:00:00 2001
+From: David Foley <favux.is@gmail.com>
+Date: Tue, 22 May 2012 12:55:45 -0500
+Subject: [PATCH libwacom] data: add ISDV4 90 tablet
+
+Represented by the ASUS R1E and ASUS R1F USB tablet PC models.
+
+Signed-off-by: David Foley <favux.is@gmail.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ data/isdv4-90.tablet | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 data/isdv4-90.tablet
+
+diff --git a/data/isdv4-90.tablet b/data/isdv4-90.tablet
+new file mode 100644
+index 0000000..c92c333
+--- /dev/null
++++ b/data/isdv4-90.tablet
+@@ -0,0 +1,18 @@
++# USB tablet PC models:  ASUS R1E and ASUS R1F
++#
++# stylus with one button and eraser
++#
++# Screen size 11.7 x 7.9; 13.3" diagonal
++
++[Device]
++Name=Wacom ISDv4 90
++DeviceMatch=usb:056a:0090;serial:056a:0090
++Class=ISDV4
++Width=12
++Height=8
++
++[Features]
++Stylus=true
++Touch=false
++Buttons=0
++BuiltIn=true
+-- 
+1.8.1.4
+
