@@ -6,5 +6,7 @@ var searchData=
   ['wacomcompareflags',['WacomCompareFlags',['../libwacom_8h.html#aa3dccc523f834020bc0aea0f6621ef8f',1,'libwacom.h']]],
   ['wacomerrorcode',['WacomErrorCode',['../libwacom_8h.html#ac3d9ee175999d6b22cee82aae8f829de',1,'libwacom.h']]],
   ['wacomfallbackflags',['WacomFallbackFlags',['../libwacom_8h.html#ac345850b5a595ab24cf120e2a89005d7',1,'libwacom.h']]],
+  ['wacomintegrationflags',['WacomIntegrationFlags',['../libwacom_8h.html#a89b8a336b7d1d0d37659db8fe976323d',1,'libwacom.h']]],
+  ['wacomstatusleds',['WacomStatusLEDs',['../libwacom_8h.html#a18a534584fbfeb1254107b30246bcfd6',1,'libwacom.h']]],
   ['wacomstylustype',['WacomStylusType',['../libwacom_8h.html#a6f96ee71140aee8ac56c80fb8353c3f6',1,'libwacom.h']]]
 ];

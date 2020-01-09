@@ -1,6 +1,6 @@
 Name:           libwacom
-Version:        0.5
-Release:        5%{?dist}
+Version:        0.8
+Release:        1%{?dist}
 Summary:        Tablet Information Client Library
 Requires:       %{name}-data
 
@@ -9,11 +9,6 @@ License:        MIT
 URL:            http://linuxwacom.sourceforge.net
 
 Source0:        http://prdownloads.sourceforge.net/linuxwacom/%{name}/%{name}-%{version}.tar.bz2
-Patch01:        libwacom-0.5-fix-missing-eraser.patch
-Patch02:        libwacom-0.5-data-add-generic-eraser-to-Bamboo-Pen-Touch.patch
-Patch03:        libwacom-0.5-tools-add-missing-linker-flags-for-list-local-device.patch
-Patch04:        libwacom-0.5-add-cintiq-22hd.patch
-Patch05:        libwacom-0.5-data-add-ISDV4-90-tablet.patch
 
 BuildRequires:  autoconf automake libtool doxygen
 BuildRequires:  glib2-devel libgudev1-devel
@@ -40,11 +35,6 @@ Tablet information client library library data files.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch01 -p1 -b .eraser
-%patch02 -p1 -b .generic-eraser
-%patch03 -p1 -b .linker-flags
-%patch04 -p1 -b .cintiq-22hd
-%patch05 -p1 -b .isdv4-90
 
 %build
 autoreconf --force -v --install || exit 1
@@ -87,8 +77,13 @@ rm -f %{buildroot}%{_libdir}/*.la
 %dir %{_datadir}/libwacom
 %{_datadir}/libwacom/*.tablet
 %{_datadir}/libwacom/*.stylus
+%dir %{_datadir}/libwacom/layouts
+%{_datadir}/libwacom/layouts/*.svg
 
 %changelog
+* Thu Apr 24 2014 Adam Jackson <ajax@redhat.com> 0.8-1
+- libwacom 0.8
+
 * Thu Jun 06 2013 Peter Hutterer <peter.hutterer@redhat.com> 0.5-5
 - Add ISDv 0x90 description (#847427)
 

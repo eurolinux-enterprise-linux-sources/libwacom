@@ -127,8 +127,8 @@ compare_written_database(WacomDeviceDatabase *db)
 	assert(*devices);
 
 	dirname = strdup("tmp.dbverify.XXXXXX");
-	dirname = mkdtemp(dirname);
-	assert(dirname);
+	assert(mkdtemp(dirname)); /* just check for non-null to avoid
+				     Coverity complaints */
 
 	for (device = devices, i = 0; *device; device++, i++) {
 		int i;
@@ -159,6 +159,7 @@ compare_written_database(WacomDeviceDatabase *db)
 			fd_stylus = open(path, O_WRONLY|O_CREAT, S_IRWXU);
 			assert(fd_stylus >= 0);
 			libwacom_print_stylus_description(fd_stylus, stylus);
+			close(fd_stylus);
 		}
 	}
 

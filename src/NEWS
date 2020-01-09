@@ -1,3 +1,31 @@
+libwacom 0.8.0:
+- New devices:
+  - Cintiq 13HD, 22HD touch
+  - DTH-2242, DTU-1931,
+  - ISDv4 EC, ED, 10F
+  - Intuos Pro
+
+libwacom 0.7.1:
+- New devices:
+  - ISDv4 10d
+- Better checks to prevent bad databases
+
+libwacom 0.7:
+- New devices: 
+  - Cintiq 22HD, 24HD touch, 
+  - ISDv4 E5, 100, 101
+- Support for SVG layouts of the tablets
+- New APIs for:
+  - list status LEDs
+  - list integration flags (differ between builtin and screen-tablets)
+
+libwacom 0.6:
+- More metadata for:
+  - NTrig tablet PC
+  - ISDv4 0x93, 0x90, 0xED, 0xEF
+  - Bamboo Pen, Fun, Craft, Touch
+- Support for debugging with uinput devices
+
 libwacom 0.5:
 - Add support for multiple match statements
 - Add support for bluetotooth devices

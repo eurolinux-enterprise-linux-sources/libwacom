@@ -142,7 +142,7 @@ libwacom_matchstr_to_matches(WacomDevice *device, const char *match)
 		return 0;
 
 	strs = g_strsplit(match, ";", 0);
-	for (i = 0; strs[i] != NULL; i++) {
+	for (i = 0; strs[i] != NULL && *strs[i] != '\0'; i++) {
 		char busstr[64];
 		int vendor_id, product_id;
 		WacomBusType bus;
@@ -246,6 +246,24 @@ struct {
 	{ "OLEDs", WACOM_BUTTON_OLED }
 };
 
+struct {
+	const char       *key;
+	WacomStatusLEDs   value;
+} supported_leds[] = {
+	{ "Ring",		WACOM_STATUS_LED_RING },
+	{ "Ring2",		WACOM_STATUS_LED_RING2 },
+	{ "Touchstrip",		WACOM_STATUS_LED_TOUCHSTRIP },
+	{ "Touchstrip2",	WACOM_STATUS_LED_TOUCHSTRIP2 }
+};
+
+struct {
+	const char             *key;
+	WacomIntegrationFlags   value;
+} integration_flags[] = {
+	{ "Display",		WACOM_DEVICE_INTEGRATED_DISPLAY },
+	{ "System",		WACOM_DEVICE_INTEGRATED_SYSTEM }
+};
+
 static void
 libwacom_parse_buttons_key(WacomDevice      *device,
 			   GKeyFile         *keyfile,
@@ -309,18 +327,21 @@ libwacom_parse_buttons(WacomDevice *device,
 }
 
 static WacomDevice*
-libwacom_parse_tablet_keyfile(const char *path)
+libwacom_parse_tablet_keyfile(const char *datadir, const char *filename)
 {
 	WacomDevice *device = NULL;
 	GKeyFile *keyfile;
 	GError *error = NULL;
 	gboolean rc;
+	char *path;
+	char *layout;
 	char *class;
 	char *match;
-	char **styli_list;
+	char **string_list;
 
 	keyfile = g_key_file_new();
 
+	path = g_build_filename (datadir, filename, NULL);
 	rc = g_key_file_load_from_file(keyfile, path, G_KEY_FILE_NONE, &error);
 
 	if (!rc) {
@@ -348,30 +369,60 @@ libwacom_parse_tablet_keyfile(const char *path)
 	device->width = g_key_file_get_integer(keyfile, DEVICE_GROUP, "Width", NULL);
 	device->height = g_key_file_get_integer(keyfile, DEVICE_GROUP, "Height", NULL);
 
+	device->integration_flags = WACOM_DEVICE_INTEGRATED_UNSET;
+	string_list = g_key_file_get_string_list(keyfile, DEVICE_GROUP, "IntegratedIn", NULL, NULL);
+	if (string_list) {
+		guint i, n;
+		gboolean found;
+
+		device->integration_flags = WACOM_DEVICE_INTEGRATED_NONE;
+		for (i = 0; string_list[i]; i++) {
+			found = FALSE;
+			for (n = 0; n < G_N_ELEMENTS (integration_flags); n++) {
+				if (!strcmp(string_list[i], integration_flags[n].key)) {
+					device->integration_flags |= integration_flags[n].value;
+					found = TRUE;
+					break;
+				}
+			}
+			if (!found)
+				g_warning ("Unrecognized integration flag '%s'", string_list[i]);
+		}
+		g_strfreev (string_list);
+	}
+
+	layout = g_key_file_get_string(keyfile, DEVICE_GROUP, "Layout", NULL);
+	if (layout) {
+		/* For the layout, we store the full path to the SVG layout */
+		device->layout = g_build_filename (datadir, "layouts", layout, NULL);
+		g_free (layout);
+	}
+
 	class = g_key_file_get_string(keyfile, DEVICE_GROUP, "Class", NULL);
 	device->cls = libwacom_class_string_to_enum(class);
 	g_free(class);
 
-	styli_list = g_key_file_get_string_list(keyfile, DEVICE_GROUP, "Styli", NULL, NULL);
-	if (styli_list) {
+	string_list = g_key_file_get_string_list(keyfile, DEVICE_GROUP, "Styli", NULL, NULL);
+	if (string_list) {
 		GArray *array;
 		guint i;
 
 		array = g_array_new (FALSE, FALSE, sizeof(int));
 		device->num_styli = 0;
-		for (i = 0; styli_list[i]; i++) {
-			glong long_value = strtol (styli_list[i], NULL, 0);
+		for (i = 0; string_list[i]; i++) {
+			glong long_value = strtol (string_list[i], NULL, 0);
 			int int_value = long_value;
 
 			g_array_append_val (array, int_value);
 			device->num_styli++;
 		}
-		g_strfreev (styli_list);
+		g_strfreev (string_list);
 		device->supported_styli = (int *) g_array_free (array, FALSE);
 	} else {
-		device->supported_styli = g_new (int, 1);
-		*device->supported_styli = 0xfffff;
-		device->num_styli = 1;
+		device->supported_styli = g_new (int, 2);
+		device->supported_styli[0] = WACOM_STYLUS_FALLBACK_ID;
+		device->supported_styli[1] = WACOM_ERASER_FALLBACK_ID;
+		device->num_styli = 2;
 	}
 
 	/* Features */
@@ -387,15 +438,13 @@ libwacom_parse_tablet_keyfile(const char *path)
 	if (g_key_file_get_boolean(keyfile, FEATURES_GROUP, "Ring2", NULL))
 		device->features |= FEATURE_RING2;
 
-	if (g_key_file_get_boolean(keyfile, FEATURES_GROUP, "BuiltIn", NULL))
-		device->features |= FEATURE_BUILTIN;
-
 	if (g_key_file_get_boolean(keyfile, FEATURES_GROUP, "Reversible", NULL))
 		device->features |= FEATURE_REVERSIBLE;
 
-	if (device->features & FEATURE_BUILTIN &&
+	if (device->integration_flags != WACOM_DEVICE_INTEGRATED_UNSET &&
+	    device->integration_flags & WACOM_DEVICE_INTEGRATED_DISPLAY &&
 	    device->features & FEATURE_REVERSIBLE)
-		g_warning ("Tablet '%s' is both reversible and builtin. This is impossible", libwacom_get_match(device));
+		g_warning ("Tablet '%s' is both reversible and integrated in screen. This is impossible", libwacom_get_match(device));
 
 	if (!(device->features & FEATURE_RING) &&
 	    (device->features & FEATURE_RING2))
@@ -413,7 +462,29 @@ libwacom_parse_tablet_keyfile(const char *path)
 		libwacom_parse_buttons(device, keyfile);
 	}
 
+	string_list = g_key_file_get_string_list(keyfile, FEATURES_GROUP, "StatusLEDs", NULL, NULL);
+	if (string_list) {
+		GArray *array;
+		guint i, n;
+
+		array = g_array_new (FALSE, FALSE, sizeof(WacomStatusLEDs));
+		device->num_leds = 0;
+		for (i = 0; string_list[i]; i++) {
+			for (n = 0; n < G_N_ELEMENTS (supported_leds); n++) {
+				if (!strcmp(string_list[i], supported_leds[n].key)) {
+					g_array_append_val (array, supported_leds[n].value);
+					device->num_leds++;
+					break;
+				}
+			}
+		}
+		g_strfreev (string_list);
+		device->status_leds = (WacomStatusLEDs *) g_array_free (array, FALSE);
+	}
+
 out:
+	if (path)
+		g_free(path);
 	if (keyfile)
 		g_key_file_free(keyfile);
 	if (error)
@@ -484,9 +555,7 @@ libwacom_database_new_for_path (const char *datadir)
 	    WacomDevice *d;
 	    const WacomMatch **matches, **match;
 
-	    path = g_build_filename (datadir, files[n]->d_name, NULL);
-	    d = libwacom_parse_tablet_keyfile(path);
-	    g_free(path);
+	    d = libwacom_parse_tablet_keyfile(datadir, files[n]->d_name);
 
 	    if (!d)
 		    continue;
@@ -495,6 +564,14 @@ libwacom_database_new_for_path (const char *datadir)
 	    for (match = matches; *match; match++) {
 		    const char *matchstr;
 		    matchstr = libwacom_match_get_match_string(*match);
+		    /* no duplicate matches allowed */
+		    if (g_hash_table_lookup(db->device_ht, matchstr) != NULL) {
+			    g_critical("Duplicate match of '%s' on device '%s'.",
+					matchstr, libwacom_get_name(d));
+			    libwacom_database_destroy(db);
+			    db = NULL;
+			    goto end;
+		    }
 		    g_hash_table_insert (db->device_ht, g_strdup (matchstr), d);
 		    d->refcnt++;
 	    }
@@ -522,16 +599,17 @@ libwacom_database_new_for_path (const char *datadir)
 	    g_free(path);
     }
 
-    while(nfiles--)
-	    free(files[nfiles]);
-    free(files);
-
     /* If we couldn't load _anything_ then something's wrong */
     if (g_hash_table_size (db->device_ht) == 0 &&
 	g_hash_table_size (db->stylus_ht) == 0) {
 	    libwacom_database_destroy(db);
-	    return NULL;
+	    db = NULL;
     }
+
+end:
+    while(nfiles--)
+	    free(files[nfiles]);
+    free(files);
 
     return db;
 }
@@ -553,7 +631,7 @@ libwacom_database_destroy(WacomDeviceDatabase *db)
 }
 
 WacomDevice**
-libwacom_list_devices_from_database(WacomDeviceDatabase *db, WacomError *error)
+libwacom_list_devices_from_database(const WacomDeviceDatabase *db, WacomError *error)
 {
 	GList *cur, *devices;
 	WacomDevice **list, **p;
