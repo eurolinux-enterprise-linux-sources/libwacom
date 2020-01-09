@@ -1,6 +1,6 @@
 Name:           libwacom
 Version:        0.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tablet Information Client Library
 Requires:       %{name}-data
 
@@ -12,6 +12,7 @@ Source0:        http://prdownloads.sourceforge.net/linuxwacom/%{name}/%{name}-%{
 Patch01:        libwacom-0.5-fix-missing-eraser.patch
 Patch02:        libwacom-0.5-data-add-generic-eraser-to-Bamboo-Pen-Touch.patch
 Patch03:        libwacom-0.5-tools-add-missing-linker-flags-for-list-local-device.patch
+Patch04:        libwacom-0.5-add-cintiq-22hd.patch
 
 BuildRequires:  autoconf automake libtool doxygen
 BuildRequires:  glib2-devel libgudev1-devel
@@ -41,6 +42,7 @@ Tablet information client library library data files.
 %patch01 -p1 -b .eraser
 %patch02 -p1 -b .generic-eraser
 %patch03 -p1 -b .linker-flags
+%patch04 -p1 -b .cintiq-22hd
 
 %build
 autoreconf --force -v --install || exit 1
@@ -85,6 +87,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_datadir}/libwacom/*.stylus
 
 %changelog
+* Tue Sep 18 2012 Olivier Fourdan <ofourdan@redhat.com> 0.5-4
+- Add Cintiq 22HD definition (#857073)
+
 * Mon May 07 2012 Olivier Fourdan <ofourdan@redhat.com> 0.5-3
 - Add generic eraser to Bamboo Pen & Touch in libwacom-0.5 (#817091)
 
