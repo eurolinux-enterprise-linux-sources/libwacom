@@ -1,0 +1,73 @@
+From 8896ed28cff26255aece4a4e964a2c8ef5a8fa51 Mon Sep 17 00:00:00 2001
+From: Jason Gerecke <killertofu@gmail.com>
+Date: Tue, 7 Nov 2017 08:49:04 -0800
+Subject: [PATCH libwacom] Add new stylus type "3D" for the new "Pro Pen 3D"
+
+The new "Pro Pen 3D" is sufficiently different from the other pen types
+that it deserves new type. This makes it easier for userspace to provide
+appropriate UI and suggested button assignments.
+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ data/libwacom.stylus         | 2 +-
+ libwacom/libwacom-database.c | 2 ++
+ libwacom/libwacom.c          | 1 +
+ libwacom/libwacom.h          | 3 ++-
+ 4 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/data/libwacom.stylus b/data/libwacom.stylus
+index d030bf0..2a6d6c2 100644
+--- a/data/libwacom.stylus
++++ b/data/libwacom.stylus
+@@ -97,7 +97,7 @@ Name=Pro Pen 3D
+ HasEraser=false
+ Buttons=3
+ Axes=Tilt;Pressure;Distance;
+-Type=General
++Type=3D
+ 
+ [0x852]
+ # Intuos2
+diff --git a/libwacom/libwacom-database.c b/libwacom/libwacom-database.c
+index e98b3a8..33c4393 100644
+--- a/libwacom/libwacom-database.c
++++ b/libwacom/libwacom-database.c
+@@ -96,6 +96,8 @@ type_from_str (const char *type)
+ 		return WSTYLUS_STROKE;
+ 	if (strcmp (type, "Puck") == 0)
+ 		return WSTYLUS_PUCK;
++	if (strcmp (type, "3D") == 0)
++		return WSTYLUS_3D;
+ 	return WSTYLUS_UNKNOWN;
+ }
+ 
+diff --git a/libwacom/libwacom.c b/libwacom/libwacom.c
+index 197e860..3daff81 100644
+--- a/libwacom/libwacom.c
++++ b/libwacom/libwacom.c
+@@ -1177,6 +1177,7 @@ libwacom_print_stylus_description (int fd, const WacomStylus *stylus)
+ 		case WSTYLUS_MARKER:	type = "Marker";	 break;
+ 		case WSTYLUS_STROKE:	type = "Stroke";	 break;
+ 		case WSTYLUS_PUCK:	type = "Puck";		break;
++		case WSTYLUS_3D:	type = "3D";		break;
+ 		default:		g_assert_not_reached();	break;
+ 	}
+ 
+diff --git a/libwacom/libwacom.h b/libwacom/libwacom.h
+index 3bac686..bb968e7 100644
+--- a/libwacom/libwacom.h
++++ b/libwacom/libwacom.h
+@@ -156,7 +156,8 @@ typedef enum {
+ 	WSTYLUS_CLASSIC,
+ 	WSTYLUS_MARKER,
+ 	WSTYLUS_STROKE,
+-	WSTYLUS_PUCK
++	WSTYLUS_PUCK,
++	WSTYLUS_3D,
+ } WacomStylusType;
+ 
+ /**
+-- 
+2.14.3
+

@@ -2,7 +2,7 @@
 
 Name:           libwacom
 Version:        0.24
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tablet Information Client Library
 Requires:       %{name}-data
 
@@ -24,6 +24,10 @@ Patch11:        0001-Add-Pro-Pen-3D.patch
 
 # Bug 1506543 - Add support for the Dell Canvas 27
 Patch12:        0001-data-Add-Dell-Canvas-27.patch
+
+# Bug 1551883 - Add support for the Wacom Cintiq Pro 24 and Cintiq Pro 32 tablets
+Patch13:        0001-Add-new-stylus-type-3D-for-the-new-Pro-Pen-3D.patch
+Patch14:        0001-Add-.data-files-for-Cintiq-Pro-24-and-32.patch
 
 BuildRequires:  autoconf automake libtool doxygen
 BuildRequires:  glib2-devel libgudev1-devel
@@ -61,6 +65,8 @@ Tablet information client library library data files.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
+%patch14 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -104,6 +110,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_datadir}/libwacom/layouts/*.svg
 
 %changelog
+* Wed Apr 04 2018 Peter Hutterer <peter.hutterer@redhat.com> 0.24-4
+- Add the Wacom Cintiq Pro 24 and Cintiq Pro 32 (#1551883)
+
 * Thu Nov 09 2017 Peter Hutterer <peter.hutterer@redhat.com> 0.24-3
 - Add the Pro Pen 3D (#1496646)
 - Add data for the Dell Canvas 27 (#1506543)
