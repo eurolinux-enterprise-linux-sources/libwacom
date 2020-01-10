@@ -1,0 +1,97 @@
+libwacom 0.12:
+- Added libwacom_stylus_has_wheel() for relative wheel detection
+- Added libwacom_stylus_get_axes() for a list of supported axes
+- New devices:
+  - Cintiq 27QHD, Cintiq 27QHD Touch
+  - DTU-1031X
+  - Intuos Pen Medium
+- Reworked udev rules
+  - be more restrictive when to set ID_INPUT_TOUCHPAD
+  - unset ID_INPUT_JOYSTICK on tablet devices
+  - tag the Pad device as ID_INPUT_TABLET_PAD
+
+libwacom 0.11:
+- Better detection of wireless tablets on kernels 3.18
+- New devices:
+  - Cintiq Companion
+
+libwacom 0.10:
+- Fixed bus detection of Bluetooth tablets on kernels 3.14
+  and later (bbe317540)
+- New devices:
+  - ISDV4 0x12C, 116, 4004, 5000, 5002
+
+libwacom 0.9.0:
+- Add support for TouchSwitch keyword
+- New devices:
+  - Intuos series
+  - Pen&Touch (2nd gen)
+  - DTU-1031
+  - Cintiq Companion Hybrid
+
+libwacom 0.8.0:
+- New devices:
+  - Cintiq 13HD, 22HD touch
+  - DTH-2242, DTU-1931,
+  - ISDv4 EC, ED, 10F
+  - Intuos Pro
+
+libwacom 0.7.1:
+- New devices:
+  - ISDv4 10d
+- Better checks to prevent bad databases
+
+libwacom 0.7:
+- New devices: 
+  - Cintiq 22HD, 24HD touch, 
+  - ISDv4 E5, 100, 101
+- Support for SVG layouts of the tablets
+- New APIs for:
+  - list status LEDs
+  - list integration flags (differ between builtin and screen-tablets)
+
+libwacom 0.6:
+- More metadata for:
+  - NTrig tablet PC
+  - ISDv4 0x93, 0x90, 0xED, 0xEF
+  - Bamboo Pen, Fun, Craft, Touch
+- Support for debugging with uinput devices
+
+libwacom 0.5:
+- Add support for multiple match statements
+- Add support for bluetotooth devices
+- Add libwacom-list-local-devices helper tool
+- Add list-devices helper tool
+- Rename udev generation tool to generate-udev-rules
+- More metadata description updates
+
+libwacom 0.4:
+- More metadata for:
+  - Intuos4 WL
+  - Bamboo One
+  - Intuos5 series
+- Don't fail to create a WacomDevice for Touch devices
+- Add API to access all items in the database
+- Add helper tool to generate udev rules from the database
+
+libwacom 0.3:
+- Loads of new and updated tablet definition files
+- Add and correct information about styli
+- Update wacom.example with loads of documentation
+  about adding new tablet definitions
+- Handle Puck device type
+- Support enumerating touchstrips, touchrings and buttons
+- Get device name from the kernel for generic tablets
+- Add support for the WACf004 serial tablet
+- Build fixes (exported symbols, soname)
+
+libwacom 0.2:
+- Don't add devices that lack DeviceMatch
+- Get whether a device is builtin from udev
+- Fix definitions for Reversible property
+- Add definition for Cintiq 21UX2
+- Add test for serial devices
+- Fix Intuos4 styli's number of buttons
+
+libwacom 0.1:
+- First release
