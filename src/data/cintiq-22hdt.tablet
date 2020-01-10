@@ -34,6 +34,7 @@
 [Device]
 Name=Wacom Cintiq 22HD touch
 DeviceMatch=usb:056a:005b
+PairedID=usb:056a:005e
 Class=Cintiq
 Width=19
 Height=11
@@ -44,7 +45,7 @@ IntegratedIn=Display
 [Features]
 Stylus=true
 Reversible=false
-Touch=false
+Touch=true
 Ring=false
 NumStrips=2
 Buttons=18
@@ -55,3 +56,5 @@ Right=K;L;M;N;J;O;P;Q;R
 
 Touchstrip=A
 Touchstrip2=J
+# Note: no physical LEDs to show mode
+StripsNumModes=4

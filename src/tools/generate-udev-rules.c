@@ -52,16 +52,39 @@ static void print_udev_header (void)
 	printf ("\n");
 }
 
-static void print_udev_entry_for_match (WacomDevice *device, const WacomMatch *match,
-					WacomBusType bus_type_filter)
+static void print_huion_quirk (void)
+{
+	/* Huion tablets have a "consumer control" device with the same
+	 * VID/PID as the tablet but only a few buttons and no axes.
+	 *
+	 */
+	printf("# HUION consumer control devices are not tablets.\n");
+	printf("ATTRS{name}==\"HUION * Consumer Control\", GOTO=\"libwacom_end\"\n");
+	printf ("\n");
+}
+
+static void print_wireless_kit_quirk (void)
+{
+	/* Bamboo and Intuos devices connected to the system via Wacom's
+	 * Wireless Accessory Kit appear to udev as having the PID of the
+	 * dongle rather than the actual tablet. Make sure we properly tag
+	 * such devices.
+	 */
+	char *match = "ENV{ID_BUS}==\"usb\", ENV{ID_VENDOR_ID}==\"056a\", ENV{ID_MODEL_ID}==\"0084\"";
+
+	printf("# Wacom Wireless Accessory Kit\n");
+	printf("%s, ENV{ID_INPUT}=\"1\", ENV{ID_INPUT_JOYSTICK}=\"\", ENV{ID_INPUT_TABLET}=\"1\"\n", match);
+	printf("ATTRS{name}==\"* Finger\", %s,  ENV{ID_INPUT_TOUCHPAD}=\"1\"\n", match);
+	printf("ATTRS{name}==\"* Pad\", %s,  ENV{ID_INPUT_TABLET_PAD}=\"1\"\n", match);
+	printf("\n");
+}
+
+static char * generate_device_match(WacomDevice *device, const WacomMatch *match)
 {
 	WacomBusType type       = libwacom_match_get_bustype (match);
 	int          vendor     = libwacom_match_get_vendor_id (match);
 	int          product    = libwacom_match_get_product_id (match);
-	char         *matchstr;
-
-	if (bus_type_filter != type)
-		return;
+	char         *matchstr = NULL;
 
 	switch (type) {
 		case WBUSTYPE_USB:
@@ -76,50 +99,56 @@ static void print_udev_entry_for_match (WacomDevice *device, const WacomMatch *m
 			break;
 		default:
 			/* Not sure how to deal with serials  */
-			return;
+			return NULL;
 	}
 
+	return matchstr;
+}
+
+static void print_udev_entry_matchstr(WacomDevice *device, const char *matchstr)
+{
 	printf ("# %s\n", libwacom_get_name (device));
 	/* unset joystick, set tablet */
 	printf ("%s ENV{ID_INPUT}=\"1\", ENV{ID_INPUT_JOYSTICK}=\"\", ENV{ID_INPUT_TABLET}=\"1\"\n", matchstr);
 
-	if (libwacom_has_touch (device))
-		printf( "ATTRS{name}==\"* Finger\", %s ENV{ID_INPUT_TOUCHPAD}=\"1\"\n", matchstr);
+	if (libwacom_has_touch (device)) {
+		const char *touchtype = "ID_INPUT_TOUCHPAD";
+		if (libwacom_get_integration_flags (device) != WACOM_DEVICE_INTEGRATED_NONE)
+			touchtype = "ID_INPUT_TOUCHSCREEN";
+		printf( "ATTRS{name}==\"* Finger\", %s ENV{%s}=\"1\"\n", matchstr, touchtype);
+	}
 
 	/* set ID_INPUT_TABLET_PAD for pads */
 	if (libwacom_get_num_buttons (device) > 0)
 		printf ("ATTRS{name}==\"* Pad\", %s ENV{ID_INPUT_TABLET_PAD}=\"1\"\n", matchstr);
-
-	g_free (matchstr);
 }
 
-static void print_uinput_entry_for_match (WacomDevice *device, const WacomMatch *match,
-					  WacomBusType bus_type_filter)
+static char * generate_uinput_match (WacomDevice *device, const WacomMatch *match)
 {
 	WacomBusType type       = libwacom_match_get_bustype (match);
 	int          vendor     = libwacom_match_get_vendor_id (match);
 	int          product    = libwacom_match_get_product_id (match);
 	const char *subsystem;
-
-	if (bus_type_filter != type)
-		return;
+	char *matchstr;
 
 	switch(type) {
 		case WBUSTYPE_USB: subsystem = "usb"; break;
 		case WBUSTYPE_BLUETOOTH: subsystem = "bluetooth"; break;
 		case WBUSTYPE_SERIAL: subsystem = "tty"; break;
 		default:
-				      return;
+			return NULL;
 	}
 
-	printf("ENV{DEVPATH}==\"/devices/virtual/*\", "
-			"ENV{PRODUCT}==\"*/%x/%x/*\", "
-			"ENV{UINPUT_DEVICE}=\"1\", "
-			"ENV{UINPUT_SUBSYSTEM}=\"%s\", "
-			"ENV{ID_VENDOR_ID}=\"%04x\", "
-			"ENV{ID_MODEL_ID}=\"%04x\", "
-			"\n", vendor, product,
-			subsystem, vendor, product);
+	matchstr = g_strdup_printf("ENV{DEVPATH}==\"/devices/virtual/*\", "
+				   "ATTRS{id/vendor}==\"%04x\", "
+				   "ATTRS{id/product}==\"%04x\", "
+				   "ENV{UINPUT_DEVICE}=\"1\", "
+				   "ENV{UINPUT_SUBSYSTEM}=\"%s\", "
+				   "ENV{ID_VENDOR_ID}=\"%04x\", "
+				   "ENV{ID_MODEL_ID}=\"%04x\", ",
+				   vendor, product,
+				   subsystem, vendor, product);
+	return matchstr;
 }
 
 static void print_uinput_entry (WacomDevice *device, WacomBusType bus_type_filter)
@@ -127,8 +156,20 @@ static void print_uinput_entry (WacomDevice *device, WacomBusType bus_type_filte
 	const WacomMatch **matches, **match;
 
 	matches = libwacom_get_matches(device);
-	for (match = matches; *match; match++)
-		print_uinput_entry_for_match(device, *match, bus_type_filter);
+	for (match = matches; *match; match++) {
+		WacomBusType type = libwacom_match_get_bustype (*match);
+		char *matchstr;
+
+		if (bus_type_filter != type)
+			continue;
+
+		matchstr = generate_uinput_match (device, *match);
+		if (matchstr == NULL)
+			continue;
+
+		print_udev_entry_matchstr (device, matchstr);
+		g_free (matchstr);
+	}
 }
 
 
@@ -137,8 +178,20 @@ static void print_udev_entry (WacomDevice *device, WacomBusType bus_type_filter)
 	const WacomMatch **matches, **match;
 
 	matches = libwacom_get_matches(device);
-	for (match = matches; *match; match++)
-		print_udev_entry_for_match(device, *match, bus_type_filter);
+	for (match = matches; *match; match++) {
+		WacomBusType type = libwacom_match_get_bustype (*match);
+		char *matchstr;
+
+		if (bus_type_filter != type)
+			continue;
+
+		matchstr = generate_device_match (device, *match);
+		if (matchstr == NULL)
+			continue;
+
+		print_udev_entry_matchstr (device, matchstr);
+		g_free (matchstr);
+	}
 }
 
 static void print_udev_trailer (void)
@@ -182,6 +235,8 @@ int main(int argc, char **argv)
 	}
 
 	print_udev_header ();
+	print_huion_quirk ();
+	print_wireless_kit_quirk ();
 	for (p = list; *p; p++)
 		print_udev_entry ((WacomDevice *) *p, WBUSTYPE_USB);
 
@@ -191,6 +246,7 @@ int main(int argc, char **argv)
 		print_udev_entry ((WacomDevice *) *p, WBUSTYPE_BLUETOOTH);
 
 	if (need_uinput_rules) {
+		printf("\n# Start of uinput rules\n");
 		for (p = list; *p; p++)
 			print_uinput_entry ((WacomDevice *) *p, WBUSTYPE_USB);
 		for (p = list; *p; p++)

@@ -1,6 +1,6 @@
 # Initialize Autoconf
 AC_PREREQ([2.60])
-AC_INIT([libwacom], [0.12])
+AC_INIT([libwacom], [0.24])
 AC_CONFIG_HEADERS([config.h])
 
 # Initialize Automake
@@ -17,7 +17,7 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 # - If binary compatibility has been broken (eg removed or changed interfaces)
 #   change to C+1:0:0
 # - If the interface is the same as the previous version, change to C:R+1:A
-LIBWACOM_LT_VERSION=5:0:3
+LIBWACOM_LT_VERSION=7:2:5
 AC_SUBST(LIBWACOM_LT_VERSION)
 
 # Initialize libtool
@@ -27,6 +27,9 @@ AC_PROG_LIBTOOL
 AC_PROG_CC
 AC_PROG_INSTALL
 PKG_PROG_PKG_CONFIG
+AC_PATH_PROG(SED, sed)
+AC_PATH_PROG(GREP, grep)
+AC_PATH_PROGS(GIT, git false) # fail any git command if we can't find git
 
 AC_CHECK_PROG(HAVE_DOXYGEN, [doxygen], [yes], [no])
 AM_CONDITIONAL(HAVE_DOXYGEN, test "x$HAVE_DOXYGEN" = xyes)
@@ -39,6 +42,11 @@ AM_CONDITIONAL(HAVE_LIBXML, test x$HAVE_LIBXML = xyes)
 
 PKG_CHECK_MODULES(GTK2, librsvg-2.0 glib-2.0 gtk+-2.0, HAVE_GTK2="yes", HAVE_GTK2="no")
 AM_CONDITIONAL(HAVE_GTK2, test x$HAVE_GTK2 = xyes)
+
+PKG_CHECK_MODULES(GLIB_236, [glib-2.0 >= 2.36], HAVE_GLIB236="yes", HAVE_GLIB236="no")
+if test "x$HAVE_GLIB236" != "xyes"; then
+    AC_DEFINE(NEED_G_TYPE_INIT, 1, [Need g_type_init() call])
+fi
 
 AC_CONFIG_FILES([Makefile
                  data/Makefile

@@ -13,6 +13,13 @@ Buttons=2
 Axes=Tilt;Pressure;Distance;
 Type=General
 
+[0xffffd]
+Name=General Pen with no Eraser
+HasEraser=false
+Buttons=2
+Axes=Pressure;
+Type=General
+
 # Inking pen have no eraser
 [0x812]
 # Intuos and Intuos2
@@ -62,10 +69,24 @@ Buttons=2
 Axes=Tilt;Pressure;Distance;
 Type=Classic
 
-[0x842]
-# Intuos2
-Name=Designer Pen
+[0x8e2]
+# Intuos P/PT 2
+Name=Intuos Pen
 HasEraser=false
+Buttons=2
+Axes=Pressure;Distance;
+Type=General
+
+# Superseded by 0x842 for the MobileStudio Pro
+# [0x842]
+# Intuos2
+# Name=Designer Pen
+# HasEraser=false
+
+[0x842]
+# MobileStudio Pro
+Name=Pro Pen
+HasEraser=true
 Buttons=2
 Axes=Tilt;Pressure;Distance;
 Type=General
@@ -193,6 +214,14 @@ IsEraser=true
 Buttons=2
 Axes=Tilt;Pressure;Distance;
 Type=Classic
+
+[0x84a]
+# MobileStudio Pro
+Name=Pro Pen Eraser
+IsEraser=true
+Buttons=2
+Axes=Tilt;Pressure;Distance;
+Type=General
 
 [0x85a]
 # Intuos2

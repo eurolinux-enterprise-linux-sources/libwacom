@@ -24,12 +24,12 @@ DeviceMatch=usb:056a:030e
 Class=Bamboo
 Width=6
 Height=4
-#Layout=intuos-s-p.svg
+Layout=intuos-s-p.svg
 IntegratedIn=
 
 [Features]
 Stylus=true
-Reversible=true
+Reversible=false
 Buttons=4
 
 [Buttons]

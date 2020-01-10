@@ -56,7 +56,7 @@ rmtmpdir(const char *dir)
 	nfiles = scandir(dir, &files, scandir_filter, alphasort);
 	while(nfiles--)
 	{
-		asprintf(&path, "%s/%s", dir, files[nfiles]->d_name);
+		assert(asprintf(&path, "%s/%s", dir, files[nfiles]->d_name) != -1);
 		assert(path);
 		remove(path);
 		free(files[nfiles]);
@@ -111,6 +111,9 @@ compare_databases(WacomDeviceDatabase *orig, WacomDeviceDatabase *new)
 		assert(old_matched[i]);
 	}
 
+	free(old_matched);
+	free(oldall);
+	free(newall);
 }
 
 /* write out the current db, read it back in, compare */
@@ -137,10 +140,10 @@ compare_written_database(WacomDeviceDatabase *db)
 		int nstyli;
 		const int *styli;
 
-		asprintf(&path, "%s/%d-%04x-%04x.tablet", dirname,
+		assert(asprintf(&path, "%s/%d-%04x-%04x.tablet", dirname,
 				libwacom_get_bustype(*device),
 				libwacom_get_vendor_id(*device),
-				libwacom_get_product_id(*device));
+				libwacom_get_product_id(*device)) != -1);
 		assert(path);
 		fd = open(path, O_WRONLY|O_CREAT, S_IRWXU);
 		assert(fd >= 0);
@@ -148,18 +151,22 @@ compare_written_database(WacomDeviceDatabase *db)
 		close(fd);
 		free(path);
 
+		if (!libwacom_has_stylus(*device))
+			continue;
+
 		styli = libwacom_get_supported_styli(*device, &nstyli);
 		for (i = 0; i < nstyli; i++) {
 			int fd_stylus;
 			const WacomStylus *stylus;
 
-			asprintf(&path, "%s/%#x.stylus", dirname, styli[i]);
+			assert(asprintf(&path, "%s/%#x.stylus", dirname, styli[i]) != -1);
 			stylus = libwacom_stylus_get_for_id(db, styli[i]);
 			assert(stylus);
 			fd_stylus = open(path, O_WRONLY|O_CREAT, S_IRWXU);
 			assert(fd_stylus >= 0);
 			libwacom_print_stylus_description(fd_stylus, stylus);
 			close(fd_stylus);
+			free(path);
 		}
 	}
 
@@ -170,6 +177,7 @@ compare_written_database(WacomDeviceDatabase *db)
 
 	rmtmpdir(dirname);
 	free(dirname);
+	free(devices);
 }
 
 

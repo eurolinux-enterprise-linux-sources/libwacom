@@ -54,11 +54,11 @@ static int buttons_have_direction (WacomDevice *device)
 	for (button = 'A'; button < 'A' + num_buttons; button++) {
 		WacomButtonFlags  flags;
 		flags = libwacom_get_button_flag(device, button);
-		if (flags & WACOM_BUTTON_DIRECTION)
-			return 1;
+		if (!(flags & WACOM_BUTTON_DIRECTION))
+			return 0;
 	}
 
-	return 0;
+	return 1;
 }
 
 static int match_mode_switch (WacomDevice *device, NumModesFn get_num_modes, WacomButtonFlags flag)
@@ -112,6 +112,29 @@ static int eraser_is_present(WacomDeviceDatabase *db, const int *styli, int nsty
 	return 0;
 }
 
+static int tablet_has_lr_buttons(WacomDevice *device)
+{
+	int nleft = 0;
+	int nright = 0;
+	int num_buttons;
+	char button;
+
+	num_buttons  = libwacom_get_num_buttons (device);
+
+	for (button = 'A'; button < 'A' + num_buttons; button++) {
+		WacomButtonFlags f = libwacom_get_button_flag(device, button);
+		if (f & WACOM_BUTTON_POSITION_LEFT)
+			nleft++;
+		if (f & WACOM_BUTTON_POSITION_RIGHT)
+			nright++;
+	}
+
+	if (nleft > 0 || nright > 0)
+		return 1;
+
+	return 0;
+}
+
 static void verify_tablet(WacomDeviceDatabase *db, WacomDevice *device)
 {
 	const char *name;
@@ -133,26 +156,32 @@ static void verify_tablet(WacomDeviceDatabase *db, WacomDevice *device)
 	assert(libwacom_get_matches(device) != NULL);
 
 	/* ISDv4 are built-in, they may be of varying size */
-	if (libwacom_get_class(device) != WCLASS_ISDV4) {
+	if (libwacom_get_class(device) != WCLASS_ISDV4 &&
+	    libwacom_get_class(device) != WCLASS_REMOTE) {
 		assert(libwacom_get_width(device) > 0);
 		assert(libwacom_get_height(device) > 0);
 	}
 	assert(libwacom_get_num_buttons(device) >= 0);
 
 	styli = libwacom_get_supported_styli(device, &nstyli);
-	assert(styli != NULL);
-	assert(nstyli >= 1);
+
+	if (libwacom_has_stylus(device)) {
+		assert(styli != NULL);
+		assert(nstyli >= 1);
+	}
 
 	switch(libwacom_get_class(device)) {
 		case WCLASS_BAMBOO:
 		case WCLASS_ISDV4:
 		case WCLASS_PEN_DISPLAYS:
 		case WCLASS_GRAPHIRE:
+		case WCLASS_REMOTE:
 			break;
 		case WCLASS_INTUOS:
 		case WCLASS_INTUOS2:
 		case WCLASS_INTUOS3:
 		case WCLASS_INTUOS4:
+		case WCLASS_INTUOS5:
 		case WCLASS_CINTIQ:
 			{
 				int i;
@@ -161,8 +190,9 @@ static void verify_tablet(WacomDeviceDatabase *db, WacomDevice *device)
 					assert(styli[i] != WACOM_ERASER_FALLBACK_ID);
 				}
 			}
+			break;
 		default:
-			assert(1); /* don't get here */
+			abort(); /* don't get here */
 	}
 
 	for (i = 0; i < nstyli; i++) {
@@ -199,7 +229,7 @@ static void verify_tablet(WacomDeviceDatabase *db, WacomDevice *device)
 		axes = libwacom_stylus_get_axes (stylus);
 		if (libwacom_stylus_get_type (stylus) == WSTYLUS_PUCK) {
 			assert((axes & WACOM_AXIS_TYPE_PRESSURE) == 0);
-		} else {
+		} else if ((styli[i] != 0xffffd) && (styli[i] != 0x8e2)) {
 			assert(axes & WACOM_AXIS_TYPE_TILT);
 			assert(axes & WACOM_AXIS_TYPE_PRESSURE);
 			assert(axes & WACOM_AXIS_TYPE_DISTANCE);
@@ -219,6 +249,9 @@ static void verify_tablet(WacomDeviceDatabase *db, WacomDevice *device)
 		assert(match_mode_switch (device, libwacom_get_strips_num_modes, WACOM_BUTTON_TOUCHSTRIP2_MODESWITCH));
 	if (libwacom_get_num_strips(device) > 0)
 		assert(match_mode_switch (device, libwacom_get_strips_num_modes, WACOM_BUTTON_TOUCHSTRIP_MODESWITCH));
+
+	if (libwacom_is_reversible(device) && libwacom_get_num_buttons(device) > 0)
+		assert(tablet_has_lr_buttons(device));
 }
 
 int main(int argc, char **argv)
@@ -239,6 +272,8 @@ int main(int argc, char **argv)
 		verify_tablet(db, *device);
 
 	libwacom_database_destroy (db);
+
+	free(devices);
 
 	return 0;
 }

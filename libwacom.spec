@@ -1,7 +1,7 @@
 %global udevdir %(pkg-config --variable=udevdir udev)
 
 Name:           libwacom
-Version:        0.12
+Version:        0.24
 Release:        1%{?dist}
 Summary:        Tablet Information Client Library
 Requires:       %{name}-data
@@ -11,6 +11,8 @@ License:        MIT
 URL:            http://linuxwacom.sourceforge.net
 
 Source0:        http://prdownloads.sourceforge.net/linuxwacom/%{name}/%{name}-%{version}.tar.bz2
+
+Patch01:        0001-data-add-support-for-Cintiq-Pro-13-16.patch
 
 BuildRequires:  autoconf automake libtool doxygen
 BuildRequires:  glib2-devel libgudev1-devel
@@ -38,6 +40,7 @@ Tablet information client library library data files.
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch01 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -81,6 +84,12 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_datadir}/libwacom/layouts/*.svg
 
 %changelog
+* Wed Mar 08 2017 Peter Hutterer <peter.hutterer@redhat.com> 0.24-1
+- libwacom 0.24 (#1401752)
+
+* Fri Jan 20 2017 Peter Hutterer <peter.hutterer@redhat.com> 0.22-2
+- Merge libwacom 0.22 from F25 (#1401752)
+
 * Mon Apr 20 2015 Peter Hutterer <peter.hutterer@redhat.com> 0.12-1
 - Merge libwacom 0.12 from F22 (#1194848)
 
