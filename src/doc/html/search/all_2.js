@@ -72,6 +72,7 @@ var searchData=
   ['werror_5funknown_5fmodel',['WERROR_UNKNOWN_MODEL',['../libwacom_8h.html#ac3d9ee175999d6b22cee82aae8f829dea5b60ef039615d8c012fa011025177a91',1,'libwacom.h']]],
   ['wfallback_5fgeneric',['WFALLBACK_GENERIC',['../libwacom_8h.html#ac345850b5a595ab24cf120e2a89005d7a1e9f569873e7c61e7998fd99967a11e0',1,'libwacom.h']]],
   ['wfallback_5fnone',['WFALLBACK_NONE',['../libwacom_8h.html#ac345850b5a595ab24cf120e2a89005d7a5b09a66d5f5ae50891993d7cf5d6cd45',1,'libwacom.h']]],
+  ['wstylus_5f3d',['WSTYLUS_3D',['../libwacom_8h.html#a6f96ee71140aee8ac56c80fb8353c3f6a42381ca7df0e5849750574b6bac327cc',1,'libwacom.h']]],
   ['wstylus_5fairbrush',['WSTYLUS_AIRBRUSH',['../libwacom_8h.html#a6f96ee71140aee8ac56c80fb8353c3f6a2b2b5a21b1b32b4655bdd7a2523d1d5f',1,'libwacom.h']]],
   ['wstylus_5fclassic',['WSTYLUS_CLASSIC',['../libwacom_8h.html#a6f96ee71140aee8ac56c80fb8353c3f6a5e7fa448c848fbf5305292d2f37ded4f',1,'libwacom.h']]],
   ['wstylus_5fgeneral',['WSTYLUS_GENERAL',['../libwacom_8h.html#a6f96ee71140aee8ac56c80fb8353c3f6a83751cf86d3119e7ee5575286871da72',1,'libwacom.h']]],

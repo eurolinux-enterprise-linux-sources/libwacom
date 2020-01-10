@@ -1,3 +1,42 @@
+libwacom 0.30:
+- New devices:
+  - Lenovo X1 Yoga 3rd
+  - HP Spectre x360, HP Elite x1012 G2, HP Envy x360
+  - Turcom TS-6610
+
+libwacom 0.29:
+- New devices:
+  - ISDv4 50b4
+
+libwacom 0.28:
+- New devices:
+  - Cintiq Pro 24, Cintiq Pro 32
+  - ISDV4 5099, 50b6, 509d, 5090, 50f1, 50f8, 5110, 508b
+  - Bamboo Pad
+  - DTK-2451, 2452
+  - One by Wacom (2nd gen)
+
+libwacom 0.27:
+- New devices:
+  - Dell Canvas 27
+  - Pro Pen 3D stylus
+  - XP-Pen Star 03
+  - ISDv4 4831 (Dell XPS 13 9365)
+- New API: libwacom_get_button_evdev_code() and the matching EvdevCodes
+  entry in the .tablet files
+
+libwacom 0.26:
+- New devices:
+  - DTH-1152
+  - Wireless Intuos Pro 2nd Generation
+  - ISDV4 4809, 481a 4822, 4824, 484c, 5010
+
+libwacom 0.25:
+- New devices:
+  - ISDV4 104, 10E, 117, 124, 4814, 5013, 5014, 503E, 503F, 5048, 5044
+  - USB Graphire
+  - Cintiq Pro 13, 16
+
 libwacom 0.24
 - New devices:
   - Second generation Intuos Pro M

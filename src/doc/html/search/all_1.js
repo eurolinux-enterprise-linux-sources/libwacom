@@ -12,6 +12,7 @@ var searchData=
   ['libwacom_5ferror_5fget_5fmessage',['libwacom_error_get_message',['../libwacom_8h.html#a6f44878163668d0c67d5fa0d5cda8658',1,'libwacom.h']]],
   ['libwacom_5ferror_5fnew',['libwacom_error_new',['../libwacom_8h.html#a2b2eedf5db08f000ca4bf245d9b62dfb',1,'libwacom.h']]],
   ['libwacom_5fget_5fbustype',['libwacom_get_bustype',['../libwacom_8h.html#ab3aa4c14e02a61c84fa67e9752bdfece',1,'libwacom.h']]],
+  ['libwacom_5fget_5fbutton_5fevdev_5fcode',['libwacom_get_button_evdev_code',['../libwacom_8h.html#a9a24171166ee19047d67a6f772cd642d',1,'libwacom.h']]],
   ['libwacom_5fget_5fbutton_5fflag',['libwacom_get_button_flag',['../libwacom_8h.html#ab62583042419e89507662048fc7593ac',1,'libwacom.h']]],
   ['libwacom_5fget_5fbutton_5fled_5fgroup',['libwacom_get_button_led_group',['../libwacom_8h.html#a505f528225b6ffe639d3b44faecd4449',1,'libwacom.h']]],
   ['libwacom_5fget_5fclass',['libwacom_get_class',['../libwacom_8h.html#abfaefac844ab6fdeb31c7ce5b322fd6d',1,'libwacom.h']]],

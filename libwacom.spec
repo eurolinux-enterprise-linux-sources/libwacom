@@ -1,33 +1,16 @@
 %global udevdir %(pkg-config --variable=udevdir udev)
 
 Name:           libwacom
-Version:        0.24
-Release:        4%{?dist}
+Version:        0.30
+Release:        1%{?dist}
 Summary:        Tablet Information Client Library
 Requires:       %{name}-data
 
 Group:          System Environment/Libraries
 License:        MIT
-URL:            http://linuxwacom.sourceforge.net
+URL:            https://github.com/linuxwacom/libwacom
 
-Source0:        http://prdownloads.sourceforge.net/linuxwacom/%{name}/%{name}-%{version}.tar.bz2
-
-Patch01:        0001-data-add-support-for-Cintiq-Pro-13-16.patch
-Patch03:        0001-data-add-multiple-missing-ISDv4-devices.patch
-Patch05:        0002-data-Add-USB-Graphire-tablet.patch
-Patch06:        0003-Add-isdv4-4814-tablet-description.patch
-Patch07:        0004-data-Add-.tablet-files-for-Wireless-Intuos-Pro-secon.patch
-Patch08:        0005-data-Add-.tablet-file-for-DTH-1152.patch
-Patch09:        0006-data-Add-more-ISDv4-devices.patch
-Patch10:        0007-data-Add-ISDv4-4831-Dell-XPS-13-9365.patch
-Patch11:        0001-Add-Pro-Pen-3D.patch
-
-# Bug 1506543 - Add support for the Dell Canvas 27
-Patch12:        0001-data-Add-Dell-Canvas-27.patch
-
-# Bug 1551883 - Add support for the Wacom Cintiq Pro 24 and Cintiq Pro 32 tablets
-Patch13:        0001-Add-new-stylus-type-3D-for-the-new-Pro-Pen-3D.patch
-Patch14:        0001-Add-.data-files-for-Cintiq-Pro-24-and-32.patch
+Source0:        https://github.com/linuxwacom/libwacom/releases/download/%{name}-%{version}/%{name}-%{version}.tar.bz2
 
 BuildRequires:  autoconf automake libtool doxygen
 BuildRequires:  glib2-devel libgudev1-devel
@@ -55,18 +38,6 @@ Tablet information client library library data files.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch01 -p1
-%patch03 -p1
-%patch05 -p1
-%patch06 -p1
-%patch07 -p1
-%patch08 -p1
-%patch09 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -110,6 +81,9 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_datadir}/libwacom/layouts/*.svg
 
 %changelog
+* Fri May 18 2018 Peter Hutterer <peter.hutterer@redhat.com> 0.30-1
+- libwacom 0.30 (#1564606)
+
 * Wed Apr 04 2018 Peter Hutterer <peter.hutterer@redhat.com> 0.24-4
 - Add the Wacom Cintiq Pro 24 and Cintiq Pro 32 (#1551883)
 
