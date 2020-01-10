@@ -1,0 +1,45 @@
+From deb92fdd857123e77e435d2b7ecb9cfece21de2c Mon Sep 17 00:00:00 2001
+From: Aaron Armstrong Skomra <skomra@gmail.com>
+Date: Thu, 13 Jul 2017 10:03:44 -0700
+Subject: [PATCH libwacom 5/7] data: Add .tablet file for DTH-1152
+
+Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+(cherry picked from commit 353708e291dab3af606272bfa7c5ec5e7ded067a)
+---
+ data/dth-1152.tablet | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 data/dth-1152.tablet
+
+diff --git a/data/dth-1152.tablet b/data/dth-1152.tablet
+new file mode 100644
+index 0000000..7b22624
+--- /dev/null
++++ b/data/dth-1152.tablet
+@@ -0,0 +1,23 @@
++# Wacom
++# DTH-1152 Interactive Pen Display
++#
++# Note: Stylus does not have an eraser
++
++[Device]
++Name=Wacom DTH1152
++DeviceMatch=usb:056a:035a
++PairedID=usb:056a:0368
++Class=PenDisplay
++Width=9
++Height=5
++#No ExpressKeys, so no layout
++IntegratedIn=Display
++
++[Features]
++Stylus=true
++Reversible=false
++Touch=true
++Ring=false
++Ring2=false
++NumStrips=0
++Buttons=0
+-- 
+2.13.5
+

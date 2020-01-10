@@ -1,0 +1,149 @@
+From 4ef27af6a5b9d18717613f915d5be4fb474542a3 Mon Sep 17 00:00:00 2001
+From: Jason Gerecke <killertofu@gmail.com>
+Date: Wed, 8 Nov 2017 13:24:48 -0800
+Subject: [PATCH libwacom] Add Pro Pen 3D
+
+The Wacom Pro Pen 3D includes a third barrel switch which is intended to
+be particularly useful in applications where one frequency uses pan, zoom,
+and rotate to navigate around a scene or model. The pen is compatible with
+the MobileStudio Pro, 2nd-gen Intuos Pro, and Cintiq Pro.
+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ data/cintiq-pro-13.tablet       | 2 +-
+ data/cintiq-pro-16.tablet       | 2 +-
+ data/intuos-pro-2-l-wl.tablet   | 2 +-
+ data/intuos-pro-2-l.tablet      | 2 +-
+ data/intuos-pro-2-m-wl.tablet   | 2 +-
+ data/intuos-pro-2-m.tablet      | 2 +-
+ data/libwacom.stylus            | 8 ++++++++
+ data/mobilestudio-pro-13.tablet | 2 +-
+ data/mobilestudio-pro-16.tablet | 2 +-
+ 9 files changed, 16 insertions(+), 8 deletions(-)
+
+diff --git a/data/cintiq-pro-13.tablet b/data/cintiq-pro-13.tablet
+index e9fb025..432d4cd 100644
+--- a/data/cintiq-pro-13.tablet
++++ b/data/cintiq-pro-13.tablet
+@@ -34,7 +34,7 @@ PairedID=usb:056a:0353
+ Width=12
+ Height=7
+ # No pad buttons, so no layout
+-Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a
++Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a;0x80842
+ IntegratedIn=Display
+
+ [Features]
+diff --git a/data/cintiq-pro-16.tablet b/data/cintiq-pro-16.tablet
+index 6a8e3fa..8577ef2 100644
+--- a/data/cintiq-pro-16.tablet
++++ b/data/cintiq-pro-16.tablet
+@@ -34,7 +34,7 @@ PairedID=usb:056a:0354
+ Width=14
+ Height=8
+ # No pad buttons, so no layout
+-Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a
++Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a;0x80842
+ IntegratedIn=Display
+
+ [Features]
+diff --git a/data/intuos-pro-2-l-wl.tablet b/data/intuos-pro-2-l-wl.tablet
+index 89445e1..ad82e00 100644
+--- a/data/intuos-pro-2-l-wl.tablet
++++ b/data/intuos-pro-2-l-wl.tablet
+@@ -50,7 +50,7 @@ Width=12
+ Height=8
+ Layout=intuos-pro-2-l.svg
+ IntegratedIn=
+-Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a
++Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a;0x80842
+
+ [Features]
+ Stylus=true
+diff --git a/data/intuos-pro-2-l.tablet b/data/intuos-pro-2-l.tablet
+index 52cebcd..09786c9 100644
+--- a/data/intuos-pro-2-l.tablet
++++ b/data/intuos-pro-2-l.tablet
+@@ -50,7 +50,7 @@ Width=12
+ Height=8
+ Layout=intuos-pro-2-l.svg
+ IntegratedIn=
+-Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a
++Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a;0x80842
+
+ [Features]
+ Stylus=true
+diff --git a/data/intuos-pro-2-m-wl.tablet b/data/intuos-pro-2-m-wl.tablet
+index d7d6694..a52792a 100644
+--- a/data/intuos-pro-2-m-wl.tablet
++++ b/data/intuos-pro-2-m-wl.tablet
+@@ -50,7 +50,7 @@ Width=9
+ Height=6
+ Layout=intuos-pro-2-m.svg
+ IntegratedIn=
+-Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a
++Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a;0x80842
+
+ [Features]
+ Stylus=true
+diff --git a/data/intuos-pro-2-m.tablet b/data/intuos-pro-2-m.tablet
+index b93b136..9c52f7b 100644
+--- a/data/intuos-pro-2-m.tablet
++++ b/data/intuos-pro-2-m.tablet
+@@ -50,7 +50,7 @@ Width=9
+ Height=6
+ Layout=intuos-pro-2-m.svg
+ IntegratedIn=
+-Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a
++Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a;0x80842
+
+ [Features]
+ Stylus=true
+diff --git a/data/libwacom.stylus b/data/libwacom.stylus
+index 2d42f07..d030bf0 100644
+--- a/data/libwacom.stylus
++++ b/data/libwacom.stylus
+@@ -91,6 +91,14 @@ Buttons=2
+ Axes=Tilt;Pressure;Distance;
+ Type=General
+
++[0x80842]
++# MobileStudio Pro
++Name=Pro Pen 3D
++HasEraser=false
++Buttons=3
++Axes=Tilt;Pressure;Distance;
++Type=General
++
+ [0x852]
+ # Intuos2
+ Name=Grip Pen
+diff --git a/data/mobilestudio-pro-13.tablet b/data/mobilestudio-pro-13.tablet
+index 1b06421..ddec6f9 100644
+--- a/data/mobilestudio-pro-13.tablet
++++ b/data/mobilestudio-pro-13.tablet
+@@ -41,7 +41,7 @@ PairedID=usb:056a:034a
+ Width=12
+ Height=7
+ Layout=mobilestudio-pro-13.svg
+-Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a
++Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a;0x80842
+ IntegratedIn=Display;System
+
+ [Features]
+diff --git a/data/mobilestudio-pro-16.tablet b/data/mobilestudio-pro-16.tablet
+index 7121120..76fdc9a 100644
+--- a/data/mobilestudio-pro-16.tablet
++++ b/data/mobilestudio-pro-16.tablet
+@@ -43,7 +43,7 @@ PairedID=usb:056a:034b
+ Width=14
+ Height=8
+ Layout=mobilestudio-pro-16.svg
+-Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a
++Styli=0x842;0x84a;0x160802;0x16080a;0x100802;0x10080a;0x140802;0x14080a;0x120802;0x100804;0x10080c;0x100902;0x10090a;0x80842
+ IntegratedIn=Display;System
+
+ [Features]
+--
+2.13.6

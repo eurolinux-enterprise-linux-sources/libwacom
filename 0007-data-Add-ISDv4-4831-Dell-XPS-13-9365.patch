@@ -1,0 +1,36 @@
+From acedd40af5497d3a36bb7b5b3a53e87a4ae16835 Mon Sep 17 00:00:00 2001
+From: Jason Gerecke <killertofu@gmail.com>
+Date: Wed, 13 Sep 2017 08:37:09 -0700
+Subject: [PATCH libwacom 7/7] data: Add ISDv4 4831 (Dell XPS 13 9365)
+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+(cherry picked from commit d14f423d692ff1f2121cc49bf22eff9844cb38da)
+---
+ data/isdv4-4831.tablet | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 data/isdv4-4831.tablet
+
+diff --git a/data/isdv4-4831.tablet b/data/isdv4-4831.tablet
+new file mode 100644
+index 0000000..35a41c6
+--- /dev/null
++++ b/data/isdv4-4831.tablet
+@@ -0,0 +1,14 @@
++# Active electrostatic (AES) sensor used by the Dell XPS 13 9365
++
++[Device]
++Name=Wacom ISDv4 4831
++DeviceMatch=i2c:056a:4831
++Class=ISDV4
++Width=12
++Height=7
++IntegratedIn=Display;System
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+-- 
+2.13.5
+

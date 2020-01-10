@@ -1,0 +1,152 @@
+From 5aabcb5855cd57289ceb63e9c7457a1c45787a71 Mon Sep 17 00:00:00 2001
+From: Jason Gerecke <killertofu@gmail.com>
+Date: Thu, 24 Aug 2017 10:54:13 -0700
+Subject: [PATCH libwacom 6/7] data: Add more ISDv4 devices
+
+Dell Venue 8 Pro 5855 (0x4809 and 0x4824)
+HP EliteBook x360 1030 G2 (0x481a)
+Dell XPS 12 9250 (0x4822)
+Dell Latitude 5285 (0x484c)
+Lenovo ThinkPad T550 (0x5010)
+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+(cherry picked from commit 6fde5ec76a3e58308ae01bc33e9f48cf708be3c7)
+---
+ data/isdv4-4809.tablet | 14 ++++++++++++++
+ data/isdv4-481a.tablet | 14 ++++++++++++++
+ data/isdv4-4822.tablet | 14 ++++++++++++++
+ data/isdv4-4824.tablet | 14 ++++++++++++++
+ data/isdv4-484c.tablet | 14 ++++++++++++++
+ data/isdv4-5010.tablet | 14 ++++++++++++++
+ 6 files changed, 84 insertions(+)
+ create mode 100644 data/isdv4-4809.tablet
+ create mode 100644 data/isdv4-481a.tablet
+ create mode 100644 data/isdv4-4822.tablet
+ create mode 100644 data/isdv4-4824.tablet
+ create mode 100644 data/isdv4-484c.tablet
+ create mode 100644 data/isdv4-5010.tablet
+
+diff --git a/data/isdv4-4809.tablet b/data/isdv4-4809.tablet
+new file mode 100644
+index 0000000..83fe6a4
+--- /dev/null
++++ b/data/isdv4-4809.tablet
+@@ -0,0 +1,14 @@
++# Active electrostatic (AES) sensor used by the Dell Venue 8 Pro 5855
++
++[Device]
++Name=Wacom ISDv4 4809
++DeviceMatch=i2c:056a:4809
++Class=ISDV4
++Width=4
++Height=7
++IntegratedIn=Display;System
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+diff --git a/data/isdv4-481a.tablet b/data/isdv4-481a.tablet
+new file mode 100644
+index 0000000..37df21a
+--- /dev/null
++++ b/data/isdv4-481a.tablet
+@@ -0,0 +1,14 @@
++# Active electrostatic (AES) sensor used by the HP EliteBook x360 1030 G2
++
++[Device]
++Name=Wacom ISDv4 481a
++DeviceMatch=i2c:056a:481a
++Class=ISDV4
++Width=12
++Height=7
++IntegratedIn=Display;System
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+diff --git a/data/isdv4-4822.tablet b/data/isdv4-4822.tablet
+new file mode 100644
+index 0000000..14ecaf5
+--- /dev/null
++++ b/data/isdv4-4822.tablet
+@@ -0,0 +1,14 @@
++# Active electrostatic (AES) sensor used by the Dell XPS 12 9250
++
++[Device]
++Name=Wacom ISDv4 4822
++DeviceMatch=i2c:056a:4822
++Class=ISDV4
++Width=11
++Height=6
++IntegratedIn=Display;System
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+diff --git a/data/isdv4-4824.tablet b/data/isdv4-4824.tablet
+new file mode 100644
+index 0000000..3984507
+--- /dev/null
++++ b/data/isdv4-4824.tablet
+@@ -0,0 +1,14 @@
++# Active electrostatic (AES) sensor used by the Dell Venue 8 Pro 5855
++
++[Device]
++Name=Wacom ISDv4 4824
++DeviceMatch=i2c:056a:4824
++Class=ISDV4
++Width=4
++Height=7
++IntegratedIn=Display;System
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+diff --git a/data/isdv4-484c.tablet b/data/isdv4-484c.tablet
+new file mode 100644
+index 0000000..fa26138
+--- /dev/null
++++ b/data/isdv4-484c.tablet
+@@ -0,0 +1,14 @@
++# Active electrostatic (AES) sensor used by the Dell Latitude 5285
++
++[Device]
++Name=Wacom ISDv4 484c
++DeviceMatch=i2c:056a:484c
++Class=ISDV4
++Width=10
++Height=7
++IntegratedIn=Display;System
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+diff --git a/data/isdv4-5010.tablet b/data/isdv4-5010.tablet
+new file mode 100644
+index 0000000..929b697
+--- /dev/null
++++ b/data/isdv4-5010.tablet
+@@ -0,0 +1,14 @@
++# Active electrostatic (AES) sensor used by the Lenovo ThinkPad T550
++
++[Device]
++Name=Wacom ISDv4 5010
++DeviceMatch=usb:056a:5010
++Class=ISDV4
++Width=11
++Height=6
++IntegratedIn=Display;System
++
++[Features]
++Stylus=true
++Touch=true
++Buttons=0
+-- 
+2.13.5
+
